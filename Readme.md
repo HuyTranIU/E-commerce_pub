@@ -1,6 +1,5 @@
 # Cách kết nối với mongodb với Design Patterns Singleton
 
-    ```sh
         class Database {
             constructor() {
                 this.connect();
@@ -37,9 +36,8 @@
             }
         }
 
-```
-
 # Sự khác nhau giữa file helpers và utils
+
     - Đều dùng chứa các func tiện ích để tái sử dụng trong toàn bộ dự án
 
     - Sự khác nhau:
@@ -57,4 +55,3 @@
             - Chứa các phương thức hỗ trợ cho một phần cụ thể của ứng dụng hoặc một tác vụ cụ thể.
             - Thường được liên kết chặt chẽ với logic và quy trình trong một phần cụ thể của ứng dụng.
             - Cung cấp các chức năng hỗ trợ cụ thể, ví dụ: xử lý yêu cầu HTTP, xử lý dữ liệu cơ sở dữ liệu, xử lý luồng dữ liệu, xử lý tương tác với bên thứ ba, v.v.
-```
