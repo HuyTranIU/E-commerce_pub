@@ -2,6 +2,9 @@
 
 const mongoose = require("mongoose");
 const { countConnect } = require("../helpers/check.connect");
+const {
+  db: { uri },
+} = require("../configs/configs.mongodb");
 
 class Database {
   constructor() {
@@ -9,8 +12,7 @@ class Database {
   }
 
   connect(type = "mongodb") {
-    const connectUrl =
-      process.env.URI_MONGODB || "mongodb://localhost:27017/shopDEV"; // Thay đổi URI kết nối tới MongoDB tại đây
+    const connectUrl = uri; // Thay đổi URI kết nối tới MongoDB tại đây
     const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,

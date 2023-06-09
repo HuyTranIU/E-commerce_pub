@@ -39,7 +39,6 @@
 # Sự khác nhau giữa file helpers và utils
 
     - Đều dùng chứa các func tiện ích để tái sử dụng trong toàn bộ dự án
-
     - Sự khác nhau:
 
 | Utils                                                                                                         | Helpers                                                                                                                                                                               |
@@ -90,3 +89,187 @@
 # PoolSize là gì??
 
     - Là một option trong MongoDb cho phép giới hạn kết nối tối đa đến cơ sở dữ liệu MongoDb. Mặc định nếu không có thì maxPoolSize là 100.
+
+# Sự khác nhau giữa file .env với configs
+
+    - env: Lưu trữ các biến môi trường trong ứng dụng. Lưu các thông tin nhạy cảm mà chúng ta không muốn mã hóa cứng vào trong code
+    - configs: Dùng để cấu hình cho ứng dụng của chúng ta. Được lưu dưới dạng json, xml. Dùng để kiểm soát lưu trữ những cấu hình của chúng ta.
+    1. File .env:
+    - Định dạng: File .env là một file văn bản đơn giản, thường có định dạng key=value, trong đó key là tên biến và value là giá trị tương ứng.
+    - Chức năng: File .env được sử dụng để lưu trữ các biến môi trường, như cấu hình kết nối đến cơ sở dữ liệu, cấu hình API keys, cấu hình thông tin bảo mật, và các cấu hình khác liên quan đến môi trường phát triển và triển khai ứng dụng.
+    - Sử dụng: File .env được đọc và sử dụng bởi các thư viện và frameworks để cung cấp cấu hình cho ứng dụng. Thông thường, các giá trị trong file .env sẽ được đọc và gán vào biến môi trường trong quá trình chạy ứng dụng.
+
+    2. Folder configs:
+    - Định dạng: Folder configs là một thư mục chứa các file cấu hình, thường được tổ chức theo các module hoặc chức năng khác nhau của ứng dụng.
+    - Chức năng: Folder configs được sử dụng để lưu trữ các file cấu hình như cấu hình của cơ sở dữ liệu, cấu hình của hệ thống, cấu hình của các bên thứ ba (như API, dịch vụ bên ngoài), và các cấu hình khác liên quan đến chức năng và cấu trúc của ứng dụng.
+    - Sử dụng: Các file cấu hình trong folder configs thường được import và sử dụng bởi các module, services hoặc controllers trong quá trình khởi tạo và cấu hình ứng dụng.
+
+# If Else & Switch
+
+    - Style code:
+        ```sh
+        // Bad
+            const isOldEnough = user => {
+                return user?.age ?? 0 > 30 // 30 là gì?
+            }
+
+        //Good
+            const AGE_REQUIREMENT = 30
+            const isOldEnough = user => {
+                    return user?.age ?? 0 > AGE_REQUIREMENT
+                }
+        ```
+
+---
+
+        //Bad
+            const validateCreate = (create, isRobo) => {
+                if(isRobo) {
+                    todo...
+                } else {
+                    todo ...
+                }
+            }
+
+        // Good
+            const validateHuman = user => {
+                todo ...
+            }
+            const validateCreate = create => {
+                todo ...
+            }
+
+---
+
+        // Bad
+            if(user.age > 30 && user.name === 'H' && user.status === 3) {
+                todo ...
+            }
+
+        // Good
+        const isOk = user.age > 30 && user.name === 'H' && user.status === 3
+        if(isOk) {
+            todo ...
+        }
+    -----------------------------------------------------------------------------------------
+        const isOk = user => {
+            return (
+                user.age > 30 &&
+                user.name === 'H' &&
+                user.status === 3
+            )
+        }
+        if(isOk(user)) {
+            todo ...
+        }
+
+---
+
+```sh
+
+    '100': 'Continue',
+    '101': 'Switching Protocols',
+    '102': 'Processing',
+    '103': 'Early Hints',
+    '200': 'OK',
+    '201': 'Created',
+    '202': 'Accepted',
+    '203': 'Non-Authoritative Information',
+    '204': 'No Content',
+    '205': 'Reset Content',
+    '206': 'Partial Content',
+```
+
+        // If Else: cho một số điều kiện nhỏ
+        const reasonPhraseCode = (code) => {
+            if(code === 100) {
+                console.log('Continue')
+            } else (code === 101) {
+                console.log('Switching Protocols')
+            }
+            ...
+        }
+
+        // Switch: sử dụng cho điều kiện lớn hơn
+        const reasonPhraseCode = code => {
+            switch (code) {
+                case 100:
+                    console.log('Continue')
+                    break
+                case 101:
+                    console.log('Switching Protocols')
+                    break
+                ...
+                default:
+                    console.log('No code')
+            }
+        }
+    reasonPhraseCode(200)
+
+---
+
+    const reasonPhraseCode = {
+        '100': 'Continue',
+        '101': 'Switching Protocols',
+        '102': 'Processing',
+        '103': 'Early Hints',
+        '200': 'OK',
+        '201': 'Created',
+        '202': 'Accepted',
+        '203': 'Non-Authoritative Information',
+        '204': 'No Content',
+        '205': 'Reset Content',
+        '206': 'Partial Content',
+        'default': 'No Code'
+    }
+    const returnReasonPhraseCode = code => {
+        console.log(reasonPhraseCode[code] || reasonPhraseCode['default'])
+    }
+
+    - Sử dụng new Map()
+        const reasonPhraseCode = new Map([
+            ['100', 'Continue'],
+            ['101', 'Switching Protocols'],
+            ['102', 'Processing'],
+            ['103', 'Early Hints'],
+            ['200', 'OK'],
+            ['201', 'Created'],
+            ['202', 'Accepted'],
+            ['203', 'Non-Authoritative Information'],
+            ['204', 'No Content'],
+            ['205', 'Reset Content'],
+            ['206', 'Partial Content'],
+            ['default': 'No Code']
+        ])
+    const returnReasonPhraseCode = code => {
+        console.log(reasonPhraseCode.get(code) || reasonPhraseCode.get('default'))
+    }
+
+```sh
+    --- new Map()
+        {(100, 'Continue'), (101, 'Switching Protocols'), (102, 'Processing'), (103, 'Early Hints')}
+
+    --- Object
+        {100: 'Continue', 101: 'Switching Protocols', 102: 'Processing', 103: 'Early Hints'}
+```
+
+## Nguyên tắc lập trình Solid trong lập trình
+
+    [SOLID] là viết tắt của 5 chữ cái đầu trong 5 nguyên tác thiết kế hướng đối tượng
+        - Single responsibility priciple (SRP)
+            - Một class chỉ nên giữ 1 trách nhiệm duy nhất.
+
+        - Open/Closed principle (OCP)
+            - Có thể mở rộng một class nhưng không được phép sửa đổi bên trong class đó.
+            - Theo nguyên lý Open/Close khi muốn thêm một chức năng cho chương trình -> nên viết class mới mở rộng class cũ bằng cách kế thừa class cũ không nên sửa đổi class cũ.
+
+        - Liskov substitution principle (LSP)
+            - Trong chương trình các Object của class con có thể thay thế class cha mà không làm thay đổi tính đúng đắn của chưng trình.
+
+        - Interface segregation principle (ISP)
+            - Thay vì dùng một interface lớn nên tách thành nhiều interface nhỏ với mục đích cụ thể
+
+        - Dependency inversion principle (DIP)
+            - Các module cấp cao không nên phụ thuộc vào các module cấp thấp.
+              Cả hai nên phụ thuộc vào [abstraction]
+            - Interface (abstraction) không nên phụ thuộc vào chi tiết mà ngược lại. (Các class giao tiếp với nhau thông qua interface không phải thông qua implementation)
