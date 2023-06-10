@@ -273,3 +273,36 @@
             - Các module cấp cao không nên phụ thuộc vào các module cấp thấp.
               Cả hai nên phụ thuộc vào [abstraction]
             - Interface (abstraction) không nên phụ thuộc vào chi tiết mà ngược lại. (Các class giao tiếp với nhau thông qua interface không phải thông qua implementation)
+
+# Signup
+
+    - Sử dụng thuật toán bất đối xứng
+    - Create privateKey và publicKey -> privateKey Sẽ được đưa cho người dùng(Không lưu vào trong hệ thống) -> publicKey sẽ được lưu vào hệ thông
+        - PrivateKey dùng để sign token
+        - PublicKey dùng để verify token
+    - Sử dụng [crypto.generateKeyPairSync(type[, options])]: là một phương thức được sử dụng để đồng bộ tạo cặp khóa bất đối xứng (asymmetric key pair). Nó tạo ra cặp khóa bao gồm private key và public key cho việc sử dụng thuật toán mã hóa bất đối xứng.
+    - [crypto.generateKeyPairSync(type[, options])]: [https://nodejs.org/api/crypto.html#cryptogeneratekeypairsynctype-options]
+        - Type: là kiểu thuật toán mã hóa bất đối xứng (rsa, dsa, ec)
+        - option: là một Object tùy chọn chỉ định thông số cho quá trình tạo khóa
+
+```sh
+const { generateKeyPairSync } = await import('node:crypto');
+
+const { publicKey, privateKey } = generateKeyPairSync('rsa', {
+  modulusLength: 4096,
+  publicKeyEncoding: {
+    type: 'pkcs1',
+    format: 'pem',
+  },
+  privateKeyEncoding: {
+    type: 'pkcs8',
+    format: 'pem',
+    cipher: 'aes-256-cbc',
+    passphrase: 'top secret',
+  },
+});
+```
+
+# Lưa lại userid, publickey và refesh token
+
+    Tạo createKeyToken lưu userId, publicKey và refreshToken -> lấy publicKey đã lưu trong db và privateKey để tạo cặp access token và refresh token

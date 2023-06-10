@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const compression = require("compression");
 const { checkOverLoad } = require("./helpers/check.connect");
+const router = require("./routers");
 require("dotenv").config();
 const app = express();
 
@@ -10,19 +11,19 @@ const app = express();
 app.use(morgan("combined"));
 app.use(helmet());
 app.use(compression());
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
 // init db
 require("./dbs/init.mongodb");
 checkOverLoad();
 
 // init router
-app.get("/", (req, res, next) => {
-  const str = "Helllo Nodejs";
-  return res.status(200).json({
-    message: "success",
-    metadata: str.repeat(1000000),
-  });
-});
+app.use("", router);
 
 // handling error
 
