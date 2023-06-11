@@ -306,3 +306,7 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
 # Lưa lại userid, publickey và refesh token
 
     Tạo createKeyToken lưu userId, publicKey và refreshToken -> lấy publicKey đã lưu trong db và privateKey để tạo cặp access token và refresh token
+
+# Viết middleware check apikey và permissions
+
+    - Là quy trình xử lý HTTP của một ứng dụng Web
