@@ -35,35 +35,35 @@ class AccessService {
       });
       if (newShop) {
         // Tạo cặp privateKey, publicKey
-        const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
-          modulusLength: 4096,
-          publicKeyEncoding: {
-            type: "pkcs1",
-            format: "pem",
-          },
-          privateKeyEncoding: {
-            type: "pkcs8",
-            format: "pem",
-          },
-        });
+        // const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
+        //   modulusLength: 4096,
+        //   publicKeyEncoding: {
+        //     type: "pkcs1",
+        //     format: "pem",
+        //   },
+        //   privateKeyEncoding: {
+        //     type: "pkcs8",
+        //     format: "pem",
+        //   },
+        // });
+        const privateKey = crypto.randomBytes(64).toString("hex");
+        const publicKey = crypto.randomBytes(64).toString("hex");
         console.log({ privateKey, publicKey });
 
         // Lưu userId và publicKey vào trong db
-        const publicKeyString = await KeyTokenService.createKeyToken({
+        const keyStore = await KeyTokenService.createKeyToken({
           userId: newShop._id,
           publicKey,
+          privateKey,
         });
 
-        if (!publicKeyString) {
-          return { code: "xxx", message: "Create publicKeyString failed!!" };
+        if (!keyStore) {
+          return { code: "xxx", message: "Create KeyStore failed!!" };
         }
-        console.log("publicKeyString::", publicKeyString);
-        const publicKeyObject = crypto.createPublicKey(publicKeyString); // Tạo publicKey được lấy từ db
-        console.log("publicKeyObject::", publicKeyObject);
         // Tạo ra cặp access token và refresh token cho shop
         const tokens = await createTokensPair(
           { userId: newShop._id, email },
-          publicKeyObject,
+          publicKey,
           privateKey
         );
         console.log("Create tokens success::", tokens);
