@@ -310,3 +310,8 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
 # Viết middleware check apikey và permissions
 
     - Là quy trình xử lý HTTP của một ứng dụng Web
+
+# Xử lý ErrorHandler trong API
+
+    - Handler 404
+    - Viết asyncHandler middleware trong express sử dụng để xử lý bất đồng bộ trong router handlers thay thế cho [try-catch]
