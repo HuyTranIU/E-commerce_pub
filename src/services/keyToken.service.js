@@ -11,7 +11,7 @@ class KeyTokenService {
     refreshToken,
   }) => {
     try {
-      // Lưu
+      // Lưu token vào dbs
       // const tokens = await keytokenModel.create({
       //   user: userId,
       //   publicKey,
