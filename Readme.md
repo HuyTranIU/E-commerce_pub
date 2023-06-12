@@ -315,3 +315,20 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
 
     - Handler 404
     - Viết asyncHandler middleware trong express sử dụng để xử lý bất đồng bộ trong router handlers thay thế cho [try-catch]
+
+# Make your api response use class
+
+    - Create file error.response.js và success.response.js
+
+# Login shop api
+
+    - Làm rõ các khái niệm token, access token, refresh token
+    1. Check emali in dbs
+    2. Match password
+    3. Create AT vs RT and save
+    4. Generate tokens
+    5. Get data return login
+
+# Logout api
+
+    - Viết fuc check Authentication

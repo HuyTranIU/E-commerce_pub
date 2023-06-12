@@ -12,3 +12,15 @@ x-api-key: 6feb4f85fa800335e02aa629ab62fcb2b0e0e50eb4034826edc2a4eae051782b05011
     "password": "abc1234"
 }
 
+###login
+
+POST {{url_dev}}/shop/login
+Content-Type: application/json
+x-api-key: 6feb4f85fa800335e02aa629ab62fcb2b0e0e50eb4034826edc2a4eae051782b05011cb6de9265a33d6ee8d7769df7798f1ce013816ab7cf5d0f21db38f0402a
+
+
+{
+    "email": "test18@gmail.com",
+    "password": "abc1234"
+}
+

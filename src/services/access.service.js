@@ -6,7 +6,8 @@ const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.service");
 const { createTokensPair } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
-const { BadRequestError } = require("../core/error.reponse");
+const { BadRequestError, AuthFailureError } = require("../core/error.reponse");
+const { findByEmail } = require("./shop.service");
 
 const RoleShop = {
   SHOP: "00001",
@@ -16,8 +17,53 @@ const RoleShop = {
 };
 
 class AccessService {
+  static logout = async ({ keyStore }) => {
+    const delKey = await KeyTokenService.removeKeyById(keyStore._id);
+    console.log({ delKey });
+    return delKey;
+  };
+
+  static login = async ({ email, password, refreshToken = null }) => {
+    // 1. Check email in dbs
+    const foundShop = await findByEmail({ email });
+    console.log("foundShop::", foundShop);
+    if (!foundShop) throw new BadRequestError("Shop not Registered!!");
+
+    // 2. Check password
+    const match = bcrypt.compare(password, foundShop.password);
+    if (!match) {
+      throw new AuthFailureError("Authentication Error!!");
+    }
+
+    const { _id: userId } = foundShop;
+    // 3. Tạo privateKey và publicKey
+    const privateKey = crypto.randomBytes(64).toString("hex");
+    const publicKey = crypto.randomBytes(64).toString("hex");
+    // 4. Tạo access token và refresh token
+    const tokens = await createTokensPair(
+      { userId, email },
+      publicKey,
+      privateKey
+    );
+
+    // 5. Lưu vào trong dbs
+    await KeyTokenService.createKeyToken({
+      userId,
+      publicKey,
+      privateKey,
+      refreshToken: tokens.refreshToken,
+    });
+
+    return {
+      shop: getInfoData({
+        fileds: ["_id", "name", "email"],
+        object: foundShop,
+      }),
+      tokens,
+    };
+  };
+
   static signUp = async ({ name, email, password }) => {
-    // try {
     const hodlerShop = await shopModel.findOne({ email }).lean();
     console.log("hodlerShop::", hodlerShop);
     if (hodlerShop) {
@@ -32,18 +78,6 @@ class AccessService {
       roles: [RoleShop.SHOP],
     });
     if (newShop) {
-      // Tạo cặp privateKey, publicKey
-      // const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
-      //   modulusLength: 4096,
-      //   publicKeyEncoding: {
-      //     type: "pkcs1",
-      //     format: "pem",
-      //   },
-      //   privateKeyEncoding: {
-      //     type: "pkcs8",
-      //     format: "pem",
-      //   },
-      // });
       const privateKey = crypto.randomBytes(64).toString("hex");
       const publicKey = crypto.randomBytes(64).toString("hex");
       console.log({ privateKey, publicKey });
@@ -81,13 +115,6 @@ class AccessService {
       code: 200,
       metadata: null,
     };
-    // } catch (error) {
-    //   return {
-    //     code: "xxx",
-    //     message: error.message,
-    //     status: "error",
-    //   };
-    // }
   };
 }
 
