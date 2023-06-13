@@ -331,4 +331,32 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
 
 # Logout api
 
-    - Viết fuc check Authentication
+    - Viết fuc check Authentication (src\auth\authUtils.js)
+
+# Xử lý token được sử dụng trái phép và cách xử lý
+
+# Event loop là gì?
+
+    - Cơ chế vòng lặp sự kiện và công việc được đưa vào hàng đợi và xử lý theo trình tự trong môi trường JS và browser
+
+![Alt text](image-2.png)
+
+# Tại sao Js là ngôn ngữ đơn luồng?
+
+# V8? và vai trò
+
+# Heap và Stack
+
+## macro task(task queue) và micro task(job queue)
+
+- Cơ chế hoạt động
+  ![Alt text](/eventloop/image.png)
+  ```sh
+    - macro-task('task queue') và micro-task(job queue): quyết định độ ưu tiên của các tác vụ trong eventloop.
+    - macro-task('task queue'): bao gồm setTimeout, setInterval, setImmediate, I/O, Ui render,...
+    - micro-task(job queue): bao gồm promise, process.nextTick, async/await,...
+    - Cơ chế hoạt động:
+        micro-task sẽ được thực hiện trước macro-task mặc dù macro-task được đưa vào hàng đợi trước.
+        macro-task sẽ được thực thi sau khi các micro-task được thực thi.
+  ```
+  ![Alt text](/eventloop/image-1.png)

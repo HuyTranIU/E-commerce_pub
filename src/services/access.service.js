@@ -4,9 +4,13 @@ const shopModel = require("../models/shop.model");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.service");
-const { createTokensPair } = require("../auth/authUtils");
+const { createTokensPair, verifyJwt } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
-const { BadRequestError, AuthFailureError } = require("../core/error.reponse");
+const {
+  BadRequestError,
+  AuthFailureError,
+  ForbiddenError,
+} = require("../core/error.reponse");
 const { findByEmail } = require("./shop.service");
 
 const RoleShop = {
@@ -17,6 +21,97 @@ const RoleShop = {
 };
 
 class AccessService {
+  static handlerRefreshToken = async (refreshToken) => {
+    // Check token này đã được sử dụng chưa
+    const foundToken = await KeyTokenService.findByRefreshTokenUsed(
+      refreshToken
+    );
+    console.log("find foundToken::", foundToken);
+    if (foundToken) {
+      const { userId, email } = await verifyJwt(
+        refreshToken,
+        foundToken.privateKey
+      );
+      console.log("Decode [1]::", { userId, email });
+      // Xóa tất cả token trong keyStore
+      await KeyTokenService.deleteKeyById(userId);
+      throw new ForbiddenError("Something wrong happend!! Please relogin");
+    }
+
+    const holderToken = await KeyTokenService.findByRefreshToken(refreshToken);
+    if (!holderToken) throw new AuthFailureError("Shop not registered 1!!");
+    console.log("Find holderToken::", holderToken);
+
+    // verifyToken
+    const { userId, email } = await verifyJwt(
+      refreshToken,
+      holderToken.privateKey
+    );
+    console.log("Decode [2]::", { userId, email });
+    // Check userId
+    const foundShop = await findByEmail({ email });
+    if (!foundShop) throw new AuthFailureError("Shop not register 2!!");
+
+    // Tạo cặp tokens mới
+    const tokens = await createTokensPair(
+      { userId, email },
+      holderToken.publicKey,
+      holderToken.privateKey
+    );
+
+    // Update lại token
+    await holderToken.updateOne({
+      $set: {
+        refreshToken: tokens.refreshToken,
+      },
+      $addToSet: {
+        refreshTokenUsed: refreshToken, // thêm refresh đã được sử dụng để lấy token mới
+      },
+    });
+
+    return {
+      user: { userId, email },
+      tokens,
+    };
+  };
+
+  static handlerRefreshTokenV2 = async ({ refreshToken, user, keyStore }) => {
+    const { userId, email } = user;
+    if (keyStore.refreshTokenUsed.includes(refreshToken)) {
+      await KeyTokenService.deleteKeyById(userId);
+      throw new ForbiddenError("Something wrong happend!! Please relogin");
+    }
+
+    if (keyStore.refreshToken !== refreshToken) {
+      throw new AuthFailureError("Shop not registered 1!!");
+    }
+
+    const foundShop = await findByEmail({ email });
+    if (!foundShop) throw new AuthFailureError("Shop not register 2!!");
+
+    // Tạo cặp tokens mới
+    const tokens = await createTokensPair(
+      { userId, email },
+      keyStore.publicKey,
+      keyStore.privateKey
+    );
+
+    // Update lại token
+    await keyStore.updateOne({
+      $set: {
+        refreshToken: tokens.refreshToken,
+      },
+      $addToSet: {
+        refreshTokenUsed: refreshToken, // thêm refresh đã được sử dụng để lấy token mới
+      },
+    });
+
+    return {
+      user,
+      tokens,
+    };
+  };
+
   static logout = async ({ keyStore }) => {
     const delKey = await KeyTokenService.removeKeyById(keyStore._id);
     console.log({ delKey });
