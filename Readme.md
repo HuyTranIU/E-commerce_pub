@@ -360,3 +360,12 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
         macro-task sẽ được thực thi sau khi các micro-task được thực thi.
   ```
   ![Alt text](/eventloop/image-1.png)
+
+# Kiến trúc lược đồ cho product (Schema Product Ecommerce)
+
+    - Polymorphic pattern
+
+![Alt text](/eventloop/polymorphic.png)
+![Alt text](/eventloop//polymorphic-1.png)
+![Alt text](/eventloop//polymorphic-2.png)
+![Alt text](/eventloop//polymorphic-3.png)
