@@ -23,7 +23,7 @@ require("./dbs/init.mongodb");
 checkOverLoad();
 
 // init router
-app.use("", router);
+app.use("/v1/api", router);
 
 // handling error
 app.use((req, res, next) => {
