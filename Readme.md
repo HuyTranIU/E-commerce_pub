@@ -369,3 +369,9 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
 ![Alt text](/eventloop//polymorphic-1.png)
 ![Alt text](/eventloop//polymorphic-2.png)
 ![Alt text](/eventloop//polymorphic-3.png)
+
+# Factory Pattern
+
+    - Simple Factory Pattern
+    - Factory Method Pattern
+    - Abstract Factory Pattern
