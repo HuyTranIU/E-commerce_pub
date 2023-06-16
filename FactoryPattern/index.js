@@ -40,37 +40,37 @@
 // console.log("With Factory Pattern::", ServiceLogistics.getTransport("10"));
 
 // Factory Method Pattern
-// class Car {
-//   constructor({
-//     name = "Car 10",
-//     price = "100.000 VND",
-//     doors = 6,
-//     customerInfo = {},
-//   }) {
-//     this.name = name;
-//     this.price = price;
-//     this.doors = doors;
-//     this.customInfo = customerInfo;
-//   }
-// }
+class Car {
+  constructor({
+    name = "Car 10",
+    price = "100.000 VND",
+    doors = 6,
+    customerInfo = {},
+  }) {
+    this.name = name;
+    this.price = price;
+    this.doors = doors;
+    this.customInfo = customerInfo;
+  }
+}
 
-// class ServiceLogistics2 {
-//   transportClass = Car;
-//   getTransport = (customerInfo) => {
-//     return new this.transportClass(customerInfo);
-//   };
-// }
-// const carService = new ServiceLogistics2();
-// console.log(
-//   "carService::",
-//   carService.getTransport({
-//     customerInfo: {
-//       name: "Car",
-//       price: "100.000 VND",
-//       cargoVolum: "1000kg",
-//     },
-//   })
-// );
+class ServiceLogistics2 {
+  transportClass = Car;
+  getTransport = (customerInfo) => {
+    return new this.transportClass(customerInfo);
+  };
+}
+const carService = new ServiceLogistics2();
+console.log(
+  "carService::",
+  carService.getTransport({
+    customerInfo: {
+      name: "Car",
+      price: "100.000 VND",
+      cargoVolum: "1000kg",
+    },
+  })
+);
 
 // Mở rộng
 // Cách 1

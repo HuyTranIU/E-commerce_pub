@@ -5,17 +5,32 @@ const { product, clothing, electronic } = require("../models/product.model");
 
 // Define factory class to create product
 class ProductFactory {
-  static async createProduct(type, payload) {
-    console.log(`type::${type}`);
-    switch (type) {
-      case "Electronics":
-        return new Electronics(payload).createElectronics();
-      case "Clothing":
-        return new Clothing(payload).createClothing();
-      default:
-        throw new BadRequestError(`Invalid Product Type ${type}`);
-    }
+  static productRegistry = {};
+
+  static registryProductType(type, classRef) {
+    ProductFactory.productRegistry[type] = classRef;
   }
+
+  static async createProduct(type, payload) {
+    const productClass = ProductFactory.productRegistry[type];
+    console.log("productClass:::", productClass);
+    if (!productClass)
+      throw new BadRequestError(`Invalid Product Type ${type}`);
+
+    return new productClass(payload).createProduct();
+  }
+
+  // static async createProduct(type, payload) {
+  //   console.log(`type::${type}`);
+  //   switch (type) {
+  //     case "Electronics":
+  //       return new Electronics(payload).createElectronics();
+  //     case "Clothing":
+  //       return new Clothing(payload).createClothing();
+  //     default:
+  //       throw new BadRequestError(`Invalid Product Type ${type}`);
+  //   }
+  // }
 }
 
 // Define base product class
@@ -48,7 +63,7 @@ class Product {
 
 // Define sub-class for different product types Clothing
 class Clothing extends Product {
-  async createClothing() {
+  async createProduct() {
     const newClothing = await clothing.create({
       ...this.product_attributes,
       product_shop: this.product_shop,
@@ -65,7 +80,7 @@ class Clothing extends Product {
 }
 
 class Electronics extends Product {
-  async createElectronics() {
+  async createProduct() {
     const newElectronic = await electronic.create({
       ...this.product_attributes,
       product_shop: this.product_shop,
@@ -80,5 +95,8 @@ class Electronics extends Product {
     return newProduct;
   }
 }
+
+ProductFactory.registryProductType("Electronics", Electronics);
+ProductFactory.registryProductType("Clothing", Clothing);
 
 module.exports = ProductFactory;
