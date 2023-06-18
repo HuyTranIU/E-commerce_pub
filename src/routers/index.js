@@ -11,6 +11,6 @@ router.use(apiKey);
 router.use(checkPermission("0000"));
 
 router.use("", require("./access"));
-router.use("", require("./product"));
+router.use("/product", require("./product"));
 
 module.exports = router;

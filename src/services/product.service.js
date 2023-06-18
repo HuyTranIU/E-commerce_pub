@@ -2,6 +2,15 @@
 
 const { BadRequestError } = require("../core/error.reponse");
 const { product, clothing, electronic } = require("../models/product.model");
+const {
+  findAllDraftsForshop,
+  findAllPublishForshop,
+  publishProductByShop,
+  unPublishProductByShop,
+  searchProductByUser,
+  findAllProducts,
+  findProduct,
+} = require("../models/repositories/product.repo");
 
 // Define factory class to create product
 class ProductFactory {
@@ -12,6 +21,15 @@ class ProductFactory {
   }
 
   static async createProduct(type, payload) {
+    const productClass = ProductFactory.productRegistry[type];
+    console.log("productClass:::", productClass);
+    if (!productClass)
+      throw new BadRequestError(`Invalid Product Type ${type}`);
+
+    return new productClass(payload).createProduct();
+  }
+
+  static async updateProduct(type, payload) {
     const productClass = ProductFactory.productRegistry[type];
     console.log("productClass:::", productClass);
     if (!productClass)
@@ -31,6 +49,50 @@ class ProductFactory {
   //       throw new BadRequestError(`Invalid Product Type ${type}`);
   //   }
   // }
+
+  // PUT
+  static async publishProductShop({ product_shop, product_id }) {
+    return await publishProductByShop({ product_shop, product_id });
+  }
+
+  static async unPublishProductShop({ product_shop, product_id }) {
+    return await unPublishProductByShop({ product_shop, product_id });
+  }
+  // END PUT
+
+  // QUERY
+  static async findAllDraftsForshop({ product_shop, limit = 50, skip = 0 }) {
+    const query = { product_shop, isDraft: true };
+    return await findAllDraftsForshop({ query, limit, skip });
+  }
+
+  static async findAllPublishForshop({ product_shop, limit = 50, skip = 0 }) {
+    const query = { product_shop, isPublished: true };
+    return await findAllPublishForshop({ query, limit, skip });
+  }
+
+  static async searchProductsUser({ keySearch }) {
+    return searchProductByUser({ keySearch });
+  }
+
+  static async findAllProducts({
+    limit = 50,
+    sort = "ctime",
+    page = 1,
+    filter = { isPublished: true },
+  }) {
+    return findAllProducts({
+      limit,
+      sort,
+      page,
+      filter,
+      select: ["product_name", "product_price", "product_thumb"],
+    });
+  }
+
+  static async findProduct({ product_id }) {
+    return findProduct({ product_id, unSelect: ["__v"] });
+  }
 }
 
 // Define base product class
@@ -71,7 +133,7 @@ class Clothing extends Product {
     console.log("newClothing::", newClothing);
     if (!newClothing) throw new BadRequestError("Create new Clothing error!!");
 
-    const newProduct = await super.createProduct(newElectronic._id);
+    const newProduct = await super.createProduct(newClothing._id);
     if (!newProduct)
       throw new BadRequestError("Create new Product Clothing error!!");
 

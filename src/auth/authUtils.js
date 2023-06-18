@@ -111,6 +111,7 @@ const authenticationV2 = asyncHandler(async (req, res, next) => {
     if (userId !== decodeUser.userId)
       throw new AuthFailureError("Invalid User!!");
     req.keyStore = keyStore;
+    req.user = decodeUser;
     return next();
   } catch (error) {
     console.log(error);
