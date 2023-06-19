@@ -375,3 +375,5 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
     - Simple Factory Pattern
     - Factory Method Pattern
     - Abstract Factory Pattern
+
+# Post, Put And Patch

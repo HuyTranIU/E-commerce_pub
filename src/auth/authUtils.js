@@ -46,14 +46,12 @@ const authentication = asyncHandler(async (req, res, next) => {
     6. Oke all -> return next()
   */
   const userId = req.headers[HEADERS.CLINET_ID];
-  console.log("userId::", userId);
   if (!userId) throw new AuthFailureError("Invalida Request x-client-id!!");
 
   const keyStore = await findByUserId(userId);
   if (!keyStore) throw new NotFoundError("Not Found KeyStore!!");
 
   const accessToken = req.headers[HEADERS.AUTHORIZATION];
-  console.log("accessToken::", req.headers[HEADERS.AUTHORIZATION]);
   if (!accessToken)
     throw new AuthFailureError("Invalida Request Authorization!!");
 
@@ -79,7 +77,6 @@ const authenticationV2 = asyncHandler(async (req, res, next) => {
     6. Oke all -> return next()
   */
   const userId = req.headers[HEADERS.CLINET_ID];
-  console.log("userId::", userId);
   if (!userId) throw new AuthFailureError("Invalida Request x-client-id!!");
 
   const keyStore = await findByUserId(userId);
@@ -102,7 +99,6 @@ const authenticationV2 = asyncHandler(async (req, res, next) => {
   }
 
   const accessToken = req.headers[HEADERS.AUTHORIZATION];
-  console.log("accessToken::", req.headers[HEADERS.AUTHORIZATION]);
   if (!accessToken)
     throw new AuthFailureError("Invalida Request Authorization!!");
 
@@ -120,7 +116,6 @@ const authenticationV2 = asyncHandler(async (req, res, next) => {
 });
 
 const verifyJwt = async (token, keySecret) => {
-  console.log("Verify token::", { token, keySecret });
   return await JWT.verify(token, keySecret);
 };
 

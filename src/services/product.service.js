@@ -10,7 +10,12 @@ const {
   searchProductByUser,
   findAllProducts,
   findProduct,
+  updateProductById,
 } = require("../models/repositories/product.repo");
+const {
+  removeObjectUndefinded,
+  updateNestedObjectParser,
+} = require("../utils");
 
 // Define factory class to create product
 class ProductFactory {
@@ -29,13 +34,13 @@ class ProductFactory {
     return new productClass(payload).createProduct();
   }
 
-  static async updateProduct(type, payload) {
+  static async updateProduct(type, productId, payload) {
+    console.log(type);
     const productClass = ProductFactory.productRegistry[type];
-    console.log("productClass:::", productClass);
     if (!productClass)
       throw new BadRequestError(`Invalid Product Type ${type}`);
 
-    return new productClass(payload).createProduct();
+    return new productClass(payload).updateProduct(productId);
   }
 
   // static async createProduct(type, payload) {
@@ -121,6 +126,10 @@ class Product {
   async createProduct(product_id) {
     return await product.create({ ...this, _id: product_id });
   }
+
+  async updateProduct(productId, payload) {
+    return await updateProductById({ productId, payload, model: product });
+  }
 }
 
 // Define sub-class for different product types Clothing
@@ -130,7 +139,6 @@ class Clothing extends Product {
       ...this.product_attributes,
       product_shop: this.product_shop,
     });
-    console.log("newClothing::", newClothing);
     if (!newClothing) throw new BadRequestError("Create new Clothing error!!");
 
     const newProduct = await super.createProduct(newClothing._id);
@@ -138,6 +146,32 @@ class Clothing extends Product {
       throw new BadRequestError("Create new Product Clothing error!!");
 
     return newProduct;
+  }
+
+  async updateProduct(productId) {
+    // 1. Remove attr has undefind, null
+    console.log(`[1]::`, this);
+    const objectParams = removeObjectUndefinded(this);
+    console.log(`[2]::`, objectParams);
+
+    // 2. Check update
+    if (objectParams.product_attributes) {
+      const updateProductAttr = removeObjectUndefinded(
+        objectParams.product_attributes
+      );
+      // update child
+      await updateProductById({
+        productId,
+        payload: updateNestedObjectParser(updateProductAttr),
+        model: clothing,
+      });
+    }
+
+    const updateProduct = await super.updateProduct(
+      productId,
+      updateNestedObjectParser(objectParams)
+    );
+    return updateProduct;
   }
 }
 
