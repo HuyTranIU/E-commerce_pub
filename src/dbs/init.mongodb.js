@@ -7,6 +7,7 @@ const {
 } = require("../configs/configs.mongodb");
 
 class Database {
+  static instance;
   constructor() {
     this.connect();
   }
