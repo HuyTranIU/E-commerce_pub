@@ -7,9 +7,10 @@ const router = express.Router();
 // Check apiKey
 router.use(apiKey);
 
-// Check premissions
+// // Check premissions
 router.use(checkPermission("0000"));
 
+router.use("/discount", require("./discount"));
 router.use("", require("./access"));
 router.use("/product", require("./product"));
 

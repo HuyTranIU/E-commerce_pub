@@ -36,7 +36,6 @@ class ProductFactory {
   }
 
   static async updateProduct(type, productId, payload) {
-    console.log(type);
     const productClass = ProductFactory.productRegistry[type];
     if (!productClass)
       throw new BadRequestError(`Invalid Product Type ${type}`);

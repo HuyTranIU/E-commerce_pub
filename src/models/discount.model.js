@@ -25,6 +25,10 @@ var discountSchema = new Schema(
       type: Number,
       require: true,
     },
+    discount_max_value: {
+      type: Number,
+      require: true,
+    },
     // Discount Code
     discount_code: {
       type: String,
@@ -40,29 +44,29 @@ var discountSchema = new Schema(
       type: Date,
       require: true,
     },
-    //So luong discount duoc su dung
+    // So luong discount duoc su dung
     discount_max_uses: {
       type: Number,
       require: true,
     },
     // So discount da su dung
-    discount_user_count: {
+    discount_uses_count: {
       type: Number,
       require: true,
     },
     // User da su dung
-    discount_user_used: {
+    discount_users_used: {
       type: Array,
       default: [],
     },
     // So luong cho phep toi da moi user duoc su dung
     discount_max_uses_per_user: {
-      type: Date,
+      type: Number,
       require: true,
     },
     // Gia tri don hang toi thieu
     discount_min_order_value: {
-      type: Date,
+      type: Number,
       require: true,
     },
     discount_shopId: {

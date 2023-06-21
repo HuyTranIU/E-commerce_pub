@@ -377,3 +377,13 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
     - Abstract Factory Pattern
 
 # Post, Put And Patch
+
+# Discount
+
+    - Generator discount code [shop | admin]
+    - Get discount amount [user]
+    - Get all discount codes [user | shop]
+    - Get all product by discount code [user]
+    - Verify discount code [user | shop]
+    - Delete discount code [admin | shop]
+    - Cancel discount code [user]
