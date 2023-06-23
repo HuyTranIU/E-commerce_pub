@@ -387,3 +387,14 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
     - Verify discount code [user | shop]
     - Delete discount code [admin | shop]
     - Cancel discount code [user]
+
+# Cart
+
+    - Add product to Cart
+    - Reduce product quantity
+    - Increase product quantity
+    - Get link to Cart
+    - Delete Cart
+    - Delete Cart item
+
+# Optimistic Locking (khóa lạc quan) và Record locking (khóa bi quan)

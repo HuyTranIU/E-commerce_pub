@@ -11,7 +11,8 @@ router.use(apiKey);
 router.use(checkPermission("0000"));
 
 router.use("/discount", require("./discount"));
-router.use("", require("./access"));
+router.use("/cart", require("./cart"));
 router.use("/product", require("./product"));
+router.use("", require("./access"));
 
 module.exports = router;
