@@ -390,11 +390,22 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
 
 # Cart
 
-    - Add product to Cart
-    - Reduce product quantity
-    - Increase product quantity
-    - Get link to Cart
-    - Delete Cart
-    - Delete Cart item
+    - Add product to Cart (User)
+    - Reduce product quantity (User)
+    - Increase product quantity (User)
+    - Get link to Cart (User)
+    - Delete Cart (User)
+    - Delete Cart item (User)
 
 # Optimistic Locking (khóa lạc quan) và Record locking (khóa bi quan)
+
+# Order
+
+    - Create new order (User)
+    - Query Orders (User)
+    - Query Order Using it's ID (User)
+    - Cancel Order (User)
+    - Update Order Status (adimin)
+    payload phía client gửi lên
+
+![Alt text](/eventloop/image4.png)

@@ -10,6 +10,8 @@ router.use(apiKey);
 // // Check premissions
 router.use(checkPermission("0000"));
 
+router.use("/checkout", require("./checkout"));
+
 router.use("/discount", require("./discount"));
 router.use("/cart", require("./cart"));
 router.use("/product", require("./product"));

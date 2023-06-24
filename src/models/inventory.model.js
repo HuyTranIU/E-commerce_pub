@@ -1,7 +1,7 @@
 const { model, Schema, Types } = require("mongoose");
 
 const DOCUMENT_NAME = "Inventory";
-const COLLECTION_NAME = "Inventories ";
+const COLLECTION_NAME = "Inventories";
 
 // Declare the Schema of the Mongo model
 const inventorySchema = new Schema(

@@ -48,7 +48,6 @@ class DiscountService {
         discount_shopId: convertToObjectIdMongodb(shopId),
       },
     });
-    console.log("Check foundDiscount::", foundDiscount);
     if (foundDiscount && foundDiscount.discount_is_active)
       throw new BadRequestError("Discount exists!!");
 
