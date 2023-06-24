@@ -409,3 +409,14 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
     payload phía client gửi lên
 
 ![Alt text](/eventloop/image4.png)
+
+# flatMap()
+
+The flatMap() method returns a new array formed by applying a given callback function to each element of the array, and then flattening the result by one level
+
+```
+const arr = [1,2,3,2]
+
+const result = arr.flatMap(i => i === 2 ? [2, 2]: 1)
+=> result = [1, 2, 2, 1, 2, 2]
+```
