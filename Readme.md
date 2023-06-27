@@ -339,7 +339,7 @@ const { publicKey, privateKey } = generateKeyPairSync('rsa', {
 
     - Cơ chế vòng lặp sự kiện và công việc được đưa vào hàng đợi và xử lý theo trình tự trong môi trường JS và browser
 
-![Alt text](image-2.png)
+![Alt text](./eventloop/image-2.png)
 
 # Tại sao Js là ngôn ngữ đơn luồng?
 
